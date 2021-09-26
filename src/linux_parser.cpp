@@ -193,7 +193,10 @@ std::vector<std::string> LinuxParser::CpuUtilization() {
   string time;
   string line;
   std::vector<std::string> returning;
-  for(pid:LinuxParser::Pids()){
+  vector<int> pids = Pids();
+  int size = pids.size();
+  for(int i = 0;i < size;i++){
+    int pid=pids[i];
     std::ifstream timestream("/proc/" + std::to_string(pid) + "stat");
     if(timestream.is_open()){
       std::getline(timestream, line);
