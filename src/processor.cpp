@@ -3,11 +3,29 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+
 using std::string;
 using std::ifstream;
 using std::istringstream;
 using std::stof;
+
 // TODO: Return the aggregate CPU utilization
+/*
+PrevIdle = previdle + previowait
+Idle = idle + iowait
+
+PrevNonIdle = prevuser + prevnice + prevsystem + previrq + prevsoftirq + prevsteal
+NonIdle = user + nice + system + irq + softirq + steal
+
+PrevTotal = PrevIdle + PrevNonIdle
+Total = Idle + NonIdle
+
+# differentiate: actual value minus the previous one
+totald = Total - PrevTotal
+idled = Idle - PrevIdle
+
+CPU_Percentage = (totald - idled)/totald
+*/
 float Processor::Utilization() {
   string key;
   string line;
@@ -31,7 +49,7 @@ float Processor::Utilization() {
           float totIdle = iowait + idle;
           float totAct = user + nice + system + irq + softIrq + steal;
           float tot = totIdle + totAct;
-          float aggCPU = totAct/tot;
+          float aggCPU = (tot-totIdle)/tot;
           return aggCPU;
         }
       }
