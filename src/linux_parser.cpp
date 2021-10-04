@@ -284,7 +284,8 @@ string LinuxParser::Ram(int pid) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
         if (key == "VmRSS:") { // using VmRSS instead of VmSize
-          return value/1024;
+          int divide = std::stoi(value)/1024; // to be in mB
+          return to_string(divide);
         }
       }
     }
