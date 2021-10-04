@@ -283,8 +283,8 @@ string LinuxParser::Ram(int pid) {
     while (std::getline(uidstream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "VmSize:") {
-          return value;
+        if (key == "VmRSS:") { // using VmRSS instead of VmSize
+          return value/1024;
         }
       }
     }
