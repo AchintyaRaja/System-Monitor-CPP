@@ -12,9 +12,7 @@ using std::to_string;
 using std::vector;
 
 // TODO: Return this process's ID
-int Process::Pid() {
-  return pid_;
-}
+int Process::Pid() {return pid_;}
 
 // TODO: Return this process's CPU utilization
 float Process::CpuUtilization() const {
@@ -32,13 +30,28 @@ float Process::CpuUtilization() const {
     float sutime = stoi(u)+stoi(s)+stoi(cu)+stoi(cs);
     sutime/=sysconf(_SC_CLK_TCK);
     float seconds = UpTime()-times;
-    returning = 100*(sutime/seconds);
+    returning = (sutime/seconds);
   }
   return returning;
 }
 
 // TODO: Return the command that generated this process
-string Process::Command() { return LinuxParser::Command(pid_); }
+string Process::Command() {
+   
+  if(LinuxParser::Command(pid_).length()>40){
+    string s;
+    for(int i = 0; i<40;i++){
+      s.push_back(LinuxParser::Command(pid_)[i]);
+    }
+    s.push_back('.');
+    s.push_back('.');
+    s.push_back('.');
+    return s;
+  }
+  else{
+    return LinuxParser::Command(pid_); 
+  }
+}
 
 // TODO: Return this process's memory utilization
 string Process::Ram() { return LinuxParser::Ram(pid_); }
@@ -47,9 +60,7 @@ string Process::Ram() { return LinuxParser::Ram(pid_); }
 string Process::User() { return LinuxParser::User(pid_); }
 
 // TODO: Return the age of this process (in seconds)
-long int Process::UpTime() const {
-  return LinuxParser::UpTime(pid_);
-}
+long int Process::UpTime() const {return LinuxParser::UpTime(pid_);}
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
