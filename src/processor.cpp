@@ -42,7 +42,6 @@ float Processor::Utilization() {
       istringstream stem(line);
       while(stem >> key >> use >> nic >> idl >> syste >> iowai >> ir >> softIr >> stea){
         if(key == "cpu"){
-          float user, nice, idle, system, iowait, irq, softIrq, steal;
           user = stof(use);
           nice = stof(nic);
           idle = stof(idl);
@@ -51,8 +50,20 @@ float Processor::Utilization() {
           irq = stof(ir);
           softIrq = stof(softIr);
           steal = stof(stea);
-          float idld = idle + iowait;
-          float totd = user + nice + idle + system + iowait + irq + softIrq + steal;
+          float Idle = idle + iowait;
+          float Tot = user + nice + idle + system + iowait + irq + softIrq + steal;
+          float prevIdle = pidle + piowait;
+          float prevTot = puser + pnice + pidle + psystem + pirq + psoftIrq + psteal;
+          float totd = Tot-prevTot;
+          float idld = Idle-prevIdle;
+          puser = user;
+          pnice = nice;
+          pidle = idle;
+          psystem = system;
+          piowait = iowait;
+          pirq = irq;
+          psoftIrq = softIrq;
+          psteal = steal;
           return (totd-idld)/totd; //I believe I am doing everything to get the correct CPU utilisation, and yet it comes out wrong
         }
       }
